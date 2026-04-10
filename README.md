@@ -6,7 +6,7 @@ A responsive Kanban board built with HTML, CSS, and modular JavaScript. The app 
 
 [Watch on Loom] Presentation video 1: (https://www.loom.com/share/e08149d0ba444e19b67a533812597cf1)
 - Presentation video 2: (https://www.loom.com/share/dc90402d024c4654bf65e7e2df99617a)
-[Link to the Netlify app]
+[Link to the Netlify app] https://lebmol25522-pto2508-jslpp.netlify.app
 
 ## Project Overview
 
