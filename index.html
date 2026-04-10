@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!--
+    Document head: page metadata, fonts, favicon, and stylesheet.
+  -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanban Board</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- App shell: sidebar + main content area -->
+    <div class="app-shell">
+      <!-- Sidebar navigation and theme controls -->
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span class="brand-name">kanban</span>
+        </div>
+
+        <div class="boards-panel">
+          <p class="boards-label">All Boards (1)</p>
+          <button class="board-link active" type="button">Launch Career</button>
+        </div>
+
+        <div class="sidebar-footer">
+          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+            <span class="theme-icon sun-icon" aria-hidden="true">&#9728;&#65039;</span>
+            <span class="toggle-track">
+              <span class="toggle-thumb"></span>
+            </span>
+            <span class="theme-icon moon-icon" aria-hidden="true">&#127761;</span>
+          </button>
+          <button class="hide-sidebar" id="hideSidebarBtn" type="button">
+            <span class="hide-icon" aria-hidden="true">🚫</span>
+            <span>Hide Sidebar</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main panel: topbar, board status, and task board -->
+      <div class="main-panel">
+        <header class="topbar">
+          <button class="mobile-brand" id="mobileMenuBtn" type="button" aria-label="Open mobile menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <h1>Launch Career</h1>
+          <div class="topbar-actions">
+            <button
+              class="primary-button"
+              id="openModalBtn"
+              type="button"
+              aria-label="Add New Task"
+            >
+              <span class="button-icon" aria-hidden="true">+</span>
+              <span class="button-label">+ Add New Task</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="board-status hidden" id="boardStatus" role="status" aria-live="polite"></div>
+
+        <main class="board" id="board">
+          <section class="column" data-status="todo">
+            <header class="column-header">
+              <span class="column-dot todo"></span>
+              <h2>Todo (<span data-count>0</span>)</h2>
+            </header>
+            <div class="tasks"></div>
+          </section>
+
+          <section class="column" data-status="doing">
+            <header class="column-header">
+              <span class="column-dot doing"></span>
+              <h2>Doing (<span data-count>0</span>)</h2>
+            </header>
+            <div class="tasks"></div>
+          </section>
+
+          <section class="column" data-status="done">
+            <header class="column-header">
+              <span class="column-dot done"></span>
+              <h2>Done (<span data-count>0</span>)</h2>
+            </header>
+            <div class="tasks"></div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Mobile sidebar reveal button -->
+    <button class="show-sidebar hidden" id="showSidebarBtn" type="button" aria-label="Show Sidebar">
+      👀
+    </button>
+
+    <!-- Mobile menu overlay for board navigation and theme toggle -->
+    <div class="mobile-menu-backdrop hidden" id="mobileMenuBackdrop">
+      <section class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobileMenuTitle">
+        <div class="mobile-menu-header">
+          <p class="boards-label" id="mobileMenuTitle">All Boards (1)</p>
+          <button class="mobile-menu-close" id="mobileMenuCloseBtn" type="button" aria-label="Close mobile menu">
+            &times;
+          </button>
+        </div>
+        <button class="board-link active mobile-board-link" type="button">Launch Career</button>
+        <div class="mobile-menu-footer">
+          <button class="theme-toggle mobile-theme-toggle" id="mobileThemeToggle" type="button" aria-label="Toggle theme">
+            <span class="theme-icon sun-icon" aria-hidden="true">&#9728;&#65039;</span>
+            <span class="toggle-track">
+              <span class="toggle-thumb"></span>
+            </span>
+            <span class="theme-icon moon-icon" aria-hidden="true">&#127761;</span>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Task modal dialog for creating and editing tasks -->
+    <div class="modal-backdrop hidden" id="modalBackdrop">
+      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-header">
+          <h2 id="modalTitle">Add New Task</h2>
+          <button class="close-button" id="closeModalBtn" type="button" aria-label="Close modal">
+            &times;
+          </button>
+        </div>
+
+        <form id="taskForm" novalidate>
+          <label class="field">
+            <span class="field-label">Title</span>
+            <input
+              id="taskTitle"
+              name="title"
+              type="text"
+              placeholder="e.g. Take chilled break"
+              maxlength="60"
+            />
+            <span class="field-error" id="titleError"></span>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Description</span>
+            <textarea
+              id="taskDescription"
+              name="description"
+              rows="4"
+              placeholder="e.g Pet your dog, have a cup of coffee, dance to your favourite song and come back to crush this challenge."
+            ></textarea>
+            <span class="field-error" id="descriptionError"></span>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Status</span>
+            <select id="taskStatus" name="status">
+              <option value="todo">todo</option>
+              <option value="doing">doing</option>
+              <option value="done">done</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Priority</span>
+            <select id="taskPriority" name="priority">
+              <option value="high">high</option>
+              <option value="medium" selected>medium</option>
+              <option value="low">low</option>
+            </select>
+          </label>
+
+          <div class="modal-actions">
+            <button class="primary-button submit-button" id="submitTaskBtn" type="submit">
+              <span class="button-label">Create Task</span>
+            </button>
+            <button class="destructive-button hidden" id="deleteTaskBtn" type="button">
+              Delete Task
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <!-- Main JavaScript entrypoint -->
+    <script type="module" src="./scripts/main.js"></script>
+  </body>
+</html>
